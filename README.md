@@ -5,6 +5,7 @@ BeanClass：只有一个属性value,也是默认属性，代表子节点,用于�
 
 ```xml
 示例：
+------------------------------------------------------
 1、简单对象
   报文字符串：
 <?xml version="1.0" encoding="utf-8"?>
@@ -27,6 +28,7 @@ public class SimpleObject {
     @XmlPath("APP_USER_ORG_NO")
     public String userOrg;    
 }
+------------------------------------------------------
 
 2、多对象
 报文字符串：
@@ -68,6 +70,7 @@ public class SimpleObject2 {
     @XmlPath("acctno")
     public String acctNo;
 }
+------------------------------------------------------
 
 3、集合
 报文字符串：
@@ -112,7 +115,8 @@ public class SimpleObject {
     @XmlPath("ioshtg")
     public String ioshtg;  
 }
-
+------------------------------------------------------
+  
 4、对象和集合
 报文字符串：
 <?xml version="1.0" encoding="utf-8"?>
@@ -174,7 +178,8 @@ public class SimpleObject1 {
     @XmlPath("userid")
     public String userId;  
 }
-
+------------------------------------------------------
+  
 5、混合类型
 报文字符串：
 <?xml version="1.0" encoding="utf-8"?>
@@ -284,7 +289,8 @@ public class Car {
     @XmlPath("carName")
     public String carName;
 }
-
+------------------------------------------------------
+  
 6、其他类型
 报文字符串：
 <?xml version="1.0" encoding="utf-8"?>
@@ -328,6 +334,7 @@ public class Car {
     @JsonPath("carName")
     public String carName;
 }
+------------------------------------------------------
 
 2、多对象
 报文字符串：
@@ -365,6 +372,7 @@ public class House {
     @JsonPath("size")
     public Integer size;
 }
+------------------------------------------------------
 
 3、集合
 报文字符串：
@@ -395,7 +403,8 @@ public class Car {
     @JsonPath("carName")
     public String carName;
 }
-
+------------------------------------------------------
+  
 4、对象和集合
 报文字符串：
 {
@@ -439,7 +448,8 @@ public class Car {
     @JsonPath("carName")
     public String carName;
 }
-
+------------------------------------------------------
+  
 5、混合类型
 报文字符串：
 {
