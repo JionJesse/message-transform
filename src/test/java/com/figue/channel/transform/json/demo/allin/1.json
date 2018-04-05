@@ -1,0 +1,42 @@
+{
+    "age": 37,
+    "chirlds": [
+        {
+            "age": 4,
+            "house": {
+                "id": "TP001",
+                "size": 89
+            },
+            "name": "json"
+        },
+        {
+            "age": 4,
+            "cars": [
+                {
+                    "carId": "DDDDD",
+                    "carName": "¿­ÃÀÈð"
+                }
+            ],
+            "house": {
+                "id": "TP001",
+                "size": 89
+            },
+            "name": "json"
+        }
+    ],
+    "houses": [
+        {
+            "id": "TP001housep",
+            "size": 819
+        }
+    ],
+    "info": {
+        "house": {
+            "id": "TP002",
+            "size": 189
+        },
+        "jobNo": "014397"
+    },
+    "name": "ÖÜ½ÜÂ×",
+    "phone": 1328974033
+}

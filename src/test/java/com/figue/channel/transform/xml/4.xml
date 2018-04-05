@@ -1,0 +1,74 @@
+<root>
+	<name>name1</name>
+	<age>12</age>
+	<phone>123456</phone>
+	<info>
+		<jobNo>2345</jobNo>
+		<house id="68">
+			<size>110</size>
+		</house>
+	</info>
+	<houses>
+		<house id="57">
+			<size>567</size>
+		</house>
+		<house id="58">
+			<size>5677</size>
+		</house>
+	</houses>
+	<chirld name="figue">
+		<age>89</age>
+		<house id="54">
+			<size>548</size>
+		</house>
+	</chirld>
+	<chirld name="figue">
+		<age>89</age>
+		<house id="891">
+			<size>8912</size>
+		</house>
+	</chirld>
+	<chirld name="figue2">
+		<age>81</age>
+		<house id="891">
+			<size>8912</size>
+		</house>
+		<cars>
+			<car>
+				<carId>DD222</carId>
+				<carName>凯美瑞</carName>
+			</car>
+			<car>
+				<carId>DD2111</carId>
+				<carName>凯美瑞2</carName>
+			</car>
+		</cars>
+	</chirld>	
+	<idno value="1010" />
+    <field id="age" value="22" />
+    <field id="nickName">hz</field>
+    <field id="houseNo">
+    	<value>0002</value>
+    </field>
+    <field id="houseNo">
+    	<value>0002</value>
+    </field>
+    <field key="info1">
+	   	<field key="jobNo">2333331</field>
+	   	<field key="compName" value="公司名称"></field>
+	   	<field key="compLocal">
+	   		<value>公司地址</value>
+	   	</field>
+    </field>
+     <field key="info12">
+    	<field key="jobNo">2333331</field>
+    	<field key="compName" value="公司名称"></field>
+    	<field key="compLocal">
+    		<value>公司地址</value>
+    	</field>
+    </field>
+    
+    <info jobNo="00001">
+    	<cmpName>zzsssge</cmpName>
+    </info>
+</root>
