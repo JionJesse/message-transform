@@ -4,9 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.logging.Logger;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -33,15 +31,12 @@ import com.figue.channel.transform.validate.Errors;
  * @version 1.0
  */
 public class JsonTransform<T> extends TransformSupport<T>{
-	protected final Log logger = LogFactory.getLog(getClass());
+	protected final Logger logger = Logger.getLogger("JsonTransform");
 
-	
 	@Override
 	public T trans2Bean(String input, Class<T> clazz) {
-		logger.debug("json报文转对象开始...");
-		if (logger.isDebugEnabled()) {
-			logger.debug("输入报文:\n" + input);
-		}
+		logger.info("json报文转对象开始...");
+		logger.info("输入报文:\n" + input);
 		
 		//添加字段验证
 		Errors errors = new Errors();	
@@ -53,7 +48,7 @@ public class JsonTransform<T> extends TransformSupport<T>{
 			jSONObjectToBean( parentjSONObject,true, bean, errors);
 			if(!errors.getErrorMsgs().isEmpty()){
 				for(String errorStr:errors.getErrorMsgs()){
-					logger.error("校验结果:\n" + errorStr);
+					logger.info("校验结果:\n" + errorStr);
 				}
 				if(isThrowsException()){
 					throw new TransformException("报文格式过程中部分字段校验不通过");
@@ -62,7 +57,7 @@ public class JsonTransform<T> extends TransformSupport<T>{
 			return bean;
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("报文格式化类" + clazz.getName() + "实例化报异常", e);
+			logger.info("报文格式化类" + clazz.getName() + "实例化报异常");
 			throw new TransformException("报文格式化类" + clazz.getName() + "实例化报异常", e);
 		}
 
@@ -71,19 +66,15 @@ public class JsonTransform<T> extends TransformSupport<T>{
 	
 	@Override
 	public String trans2String(T input) {
-		logger.debug("对象转报文开始...");
-		if (logger.isDebugEnabled()) {
-			logger.debug("输入对象:\n" + input);
-		}
+		logger.info("对象转报文开始...");
+	    logger.info("输入对象:\n" + input);
 		// 格式化对象得到报文字符串
 		try {
 			JSONObject root = new JSONObject();
 			beanToStr(input, true,root);
 			
 			String xmlStr = JSON.toJSONString(root);
-			if (logger.isDebugEnabled()) {
-				logger.debug("对象格式化成报文如下:\n" + xmlStr);
-			}
+			logger.info("对象格式化成报文如下:\n" + xmlStr);
 			return xmlStr;
 		} catch (Exception e) {
 			throw new TransformException("对象格式化成报文异常",e);
@@ -178,10 +169,8 @@ public class JsonTransform<T> extends TransformSupport<T>{
 								
 								//校验
 								validateField( field, AccessBeanUtil.getFieldValue(field, currentobject),  errors);
-								if (logger.isDebugEnabled()) {
-									logger.debug("解析完成-->" + currentobject.getClass().getName() + "." + field.getName()
+									logger.info("解析完成-->" + currentobject.getClass().getName() + "." + field.getName()
 											+ ",JsonPath:" + key + ",值:" + value + ";");
-								}
 							}
 						}
 					}
@@ -222,7 +211,7 @@ public class JsonTransform<T> extends TransformSupport<T>{
 						Object listT =  AccessBeanUtil.getFieldValue(field, object);
 						
 						if(null!=listT){						
-							System.out.println(listT.getClass());
+							//System.out.println(listT.getClass());
 							List listBean = (List) listT;
 							JSONArray listBeanObject = new JSONArray();
 							currentJSONObject.put(jsonPathValueList,listBeanObject);
@@ -269,10 +258,8 @@ public class JsonTransform<T> extends TransformSupport<T>{
 							Object value =  AccessBeanUtil.getFieldValue(field, object);
 							currentJSONObject.put(key,value);
 							
-							if (logger.isDebugEnabled()) {
-								logger.debug("格式化完成-->" + object.getClass().getName() + "." + field.getName()
+							logger.info("格式化完成-->" + object.getClass().getName() + "." + field.getName()
 										+ ",JsonPath:" + key + ",值:" + value + ";");
-							}
 
 						}
 					}

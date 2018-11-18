@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,8 +22,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -52,14 +51,13 @@ import com.figue.channel.transform.validate.Errors;
  * @version 1.0
  */
 public class XmlTransform<T> extends TransformSupport<T> {
-	protected final Log logger = LogFactory.getLog(getClass());
+	protected final Logger logger = Logger.getLogger("XmlTransform");
 
 	@Override
 	public T trans2Bean(String input,Class<T> clazz) {
-		logger.debug("xml报文转对象开始...");
-		if (logger.isDebugEnabled()) {
-			logger.debug("输入报文:\n" + input);
-		}
+		
+		logger.info("输入报文:\n" + input);
+		
 		// 解析
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		dbf.setValidating(false);
@@ -69,7 +67,7 @@ public class XmlTransform<T> extends TransformSupport<T> {
 			doc = db.parse(new InputSource(new ByteArrayInputStream(input.getBytes())));
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("xml字符串创建Document文档异常,字符串如下:/n" + input, e);
+			logger.info("xml字符串创建Document文档异常,字符串如下:/n" + input);
 			throw new TransformException("xml字符串创建Document文档异常,字符串如下:/n" + input, e);
 		}
 		
@@ -81,7 +79,7 @@ public class XmlTransform<T> extends TransformSupport<T> {
 			bean = clazz.newInstance();
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("报文格式化类" + clazz.getName() + "实例化报异常", e);
+			logger.info("报文格式化类" + clazz.getName() + "实例化报异常");
 			throw new TransformException("报文格式化类" + clazz.getName() + "实例化报异常", e);
 		}
 
@@ -93,7 +91,7 @@ public class XmlTransform<T> extends TransformSupport<T> {
 		
 		if(!errors.getErrorMsgs().isEmpty()){
 			for(String errorStr:errors.getErrorMsgs()){
-				logger.error("校验结果:\n" + errorStr);
+				logger.info("校验结果:\n" + errorStr);
 			}
 			if(isThrowsException()){
 				throw new TransformException("报文格式过程中部分字段校验不通过");
@@ -104,16 +102,14 @@ public class XmlTransform<T> extends TransformSupport<T> {
 	}
 	
 	public T trans2Bean(File file,Class<T> clazz) {
-		logger.debug("报文转对象开始...");
+		logger.info("报文转对象开始...");
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		dbf.setValidating(false);
 		Document doc = null;
 		try {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			doc = db.parse(new FileInputStream(file));
-			if (logger.isDebugEnabled()) {
-				logger.debug("输入报文:\n" + file.getAbsolutePath());
-			}
+		    logger.info("输入报文:\n" + file.getAbsolutePath());
 		} catch (Exception e) {
 			throw new TransformException("xml字符串创建Document文档异常," + file.getAbsolutePath(), e);
 		}
@@ -134,7 +130,7 @@ public class XmlTransform<T> extends TransformSupport<T> {
 		
 		if(!errors.getErrorMsgs().isEmpty()){
 			for(String errorStr:errors.getErrorMsgs()){
-				logger.error("校验结果:\n" + errorStr);
+				logger.info("校验结果:\n" + errorStr);
 			}
 			if(isThrowsException()){
 				throw new TransformException("报文格式过程中部分字段校验不通过");
@@ -188,7 +184,7 @@ public class XmlTransform<T> extends TransformSupport<T> {
 				if (field.isAnnotationPresent(XmlPath.class)||field.isAnnotationPresent(BeanClass.class)) {
 					Class fieldClass = field.getType();
 					if(fieldClass == java.util.List.class){//集合字段
-						System.out.println(fieldClass);
+						//System.out.println(fieldClass);
 						BeanClass beanClass = null;
 						if(field.isAnnotationPresent(BeanClass.class)){//集合字段并且有BeanClass注解才解析							
 							beanClass = (BeanClass) field.getAnnotation(BeanClass.class);
@@ -259,9 +255,7 @@ public class XmlTransform<T> extends TransformSupport<T> {
 							
 									
 							String valueAttr = fieldXmlPath.valueAttr();
-							if (logger.isDebugEnabled()) {
-								logger.debug("解析到-->" + fieldXmlPathRel+ " " + valueAttr);
-							}
+							logger.info("解析到-->" + fieldXmlPathRel+ " " + valueAttr);
 							Node node = selectSingleNode(fieldXmlPathRel, doc);
 							if(null==node){
 								throw new TransformException(fieldXmlPathRel+"在xml中无对应的节点数据");
@@ -272,11 +266,8 @@ public class XmlTransform<T> extends TransformSupport<T> {
 								String value = null;
 								if(null!=attr){
 									value = attr.getValue();
-								}
-								
-								if (logger.isDebugEnabled()) {
-									logger.debug("属性:"+field.getName() + ",值:" + value + ",路径:" + fieldXmlPathRel + " " + valueAttr);
-								}
+								}								
+								logger.info("属性:"+field.getName() + ",值:" + value + ",路径:" + fieldXmlPathRel + " " + valueAttr);
 								
 								AccessBeanUtil.setFieldValue(object, field, value);
 								//校验
@@ -288,9 +279,7 @@ public class XmlTransform<T> extends TransformSupport<T> {
 								if(null!=childrenText){
 									value = node.getTextContent().trim();
 								}
-								if (logger.isDebugEnabled()) {
-									logger.debug("属性:"+field.getName() + ",值:" + value + ",路径:" + fieldXmlPathRel + " " + valueAttr);
-								}
+								logger.info("属性:"+field.getName() + ",值:" + value + ",路径:" + fieldXmlPathRel + " " + valueAttr);
 								
 								AccessBeanUtil.setFieldValue(object, field, value);
 								//校验
@@ -309,10 +298,9 @@ public class XmlTransform<T> extends TransformSupport<T> {
 
 	@Override
 	public String trans2String(T input) {
-		logger.debug("对象转报文开始...");
-		if (logger.isDebugEnabled()) {
-			logger.debug("输入对象:\n" + input);
-		}
+		logger.info("对象转报文开始...");
+		logger.info("输入对象:\n" + input);
+		
 		//格式化对象得到报文字符串
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -328,9 +316,7 @@ public class XmlTransform<T> extends TransformSupport<T> {
 			t.transform(new DOMSource(doc), new StreamResult(bos));
 			
 			String xmlStr = bos.toString();
-			if (logger.isDebugEnabled()) {
-				logger.debug("对象格式化成报文如下:\n" + xmlStr);
-			}
+			logger.info("对象格式化成报文如下:\n" + xmlStr);
 			return xmlStr;
 		} catch (Exception e) {
 			throw new TransformException("对象格式化成报文异常",e);
@@ -461,9 +447,7 @@ public class XmlTransform<T> extends TransformSupport<T> {
 
 							//普通字段的属性配置
 							String valueAttr = fieldXmlPath.valueAttr();
-							if (logger.isDebugEnabled()) {
-								logger.debug("格式化到-->" + fieldXmlPathRel+ " " + valueAttr);
-							}
+							logger.info("格式化到-->" + fieldXmlPathRel+ " " + valueAttr);
 							
 							Object value = AccessBeanUtil.getFieldValue(field, object);
 							if(null!=value){
@@ -473,10 +457,7 @@ public class XmlTransform<T> extends TransformSupport<T> {
 									fieldNode.setTextContent(AccessBeanUtil.convertFieldValueToStr(field,value));
 								}							
 							}
-							if (logger.isDebugEnabled()) {
-								logger.debug(
-										"属性:"+field.getName() + ",值:" + value + ",路径:" + fieldXmlPathRel + " " + valueAttr);
-							}
+							logger.info("属性:"+field.getName() + ",值:" + value + ",路径:" + fieldXmlPathRel + " " + valueAttr);
 						}
 					}
 
